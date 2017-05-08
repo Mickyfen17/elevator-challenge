@@ -13,17 +13,28 @@ export default class Elevator {
 
   goToFloor(user) {
     const { name, currentFloor, dropOffFloor } = user;
-    this.currentFloor = dropOffFloor;
     this.motionStatus = 'idle';
+    this.direction = this.elvDirection(currentFloor, dropOffFloor)
     this.requests.push(currentFloor, dropOffFloor)
     this.riders.push(name);
+    this.getStops(currentFloor, dropOffFloor);
+    this.currentFloor = dropOffFloor;
     return this;
   }
 
-  getStops() {
+  getStops(riderFloor, dropOffFloor) {
     this.floorsStopped = this.requests.length;
-    this.floorsTravelled = this.requests.reduce((inc, num) => inc += num ,0)
+    if(riderFloor < dropOffFloor) {
+      return this.floorsTravelled += dropOffFloor;
+    }
+    this.floorsTravelled = this.requests.reduce((acc, num, i) => {
+      return i % 2 === 0 ? acc += num : acc += (this.requests[i - 1] - num)
+    }, 0)
     return this.requests;
+  }
+
+  elvDirection(currentFloor, dropOffFloor) {
+    return currentFloor < dropOffFloor ? 'going up' : 'going down'
   }
 
   reset() {
