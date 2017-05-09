@@ -85,16 +85,16 @@ describe('Elevator', function() {
     const mockUser2 = new Person({ name: "Sue", currentFloor: 1, dropOffFloor: 5 });
 
     elevator.goToFloor(mockUser1);
-    // console.log(elevator.riders);
     assert.equal(elevator.direction, 'going up');
     assert.equal(elevator.floorsStopped, 2);
     assert.equal(elevator.floorsTravelled, 7);
+    assert.equal(elevator.exitingRider, 'Bob');
 
     elevator.goToFloor(mockUser2);
-    // console.log(elevator.riders);
     assert.equal(elevator.direction, 'going up');
     assert.equal(elevator.floorsStopped, 4);
     assert.equal(elevator.floorsTravelled, 17);
+    assert.equal(elevator.exitingRider, 'Sue');
   })
 
   it('should be able to pick two riders up with the first rider going up and second rider coming down', () => {
@@ -102,16 +102,16 @@ describe('Elevator', function() {
     const mockUser2 = new Person({ name: "Sue", currentFloor: 7, dropOffFloor: 4 });
 
     elevator.goToFloor(mockUser1);
-    // console.log(elevator.riders);
     assert.equal(elevator.direction, 'going up');
     assert.equal(elevator.floorsStopped, 2);
     assert.equal(elevator.floorsTravelled, 8);
+    assert.equal(elevator.exitingRider, 'Bob');
 
     elevator.goToFloor(mockUser2);
-    // console.log(elevator.riders);
     assert.equal(elevator.direction, 'going down');
     assert.equal(elevator.floorsStopped, 4);
     assert.equal(elevator.floorsTravelled, 12);
+    assert.equal(elevator.exitingRider, 'Sue');
   })
 
   it('should be able to pick two riders up with the first rider coming down and second rider going down', () => {
@@ -119,16 +119,16 @@ describe('Elevator', function() {
     const mockUser2 = new Person({ name: "Sue", currentFloor: 2, dropOffFloor: 5 });
 
     elevator.goToFloor(mockUser1);
-    // console.log(elevator.riders);
     assert.equal(elevator.direction, 'going down');
     assert.equal(elevator.floorsStopped, 2);
     assert.equal(elevator.floorsTravelled, 11);
+    assert.equal(elevator.exitingRider, 'Bob');
 
     elevator.goToFloor(mockUser2);
-    // console.log(elevator.riders);
     assert.equal(elevator.direction, 'going up');
     assert.equal(elevator.floorsStopped, 4);
     assert.equal(elevator.floorsTravelled, 15);
+    assert.equal(elevator.exitingRider, 'Sue');
   })
 
   it('should be able to pick two riders up with both riders going down', () => {
@@ -136,15 +136,15 @@ describe('Elevator', function() {
     const mockUser2 = new Person({ name: "Sue", currentFloor: 8, dropOffFloor: 5 });
 
     elevator.goToFloor(mockUser1);
-    // console.log(elevator.riders);
     assert.equal(elevator.direction, 'going down');
     assert.equal(elevator.floorsStopped, 2);
     assert.equal(elevator.floorsTravelled, 12);
+    assert.equal(elevator.exitingRider, 'Bob');
 
     elevator.goToFloor(mockUser2);
-    // console.log(elevator.riders);
     assert.equal(elevator.direction, 'going down');
     assert.equal(elevator.floorsStopped, 4);
     assert.equal(elevator.floorsTravelled, 21);
+    assert.equal(elevator.exitingRider, 'Sue');
   })
 });
