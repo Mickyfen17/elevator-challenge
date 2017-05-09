@@ -8,9 +8,6 @@ export default class Elevator {
     this.motionStatus = '';
   }
 
-  // get currentFloor() {
-  // }
-
   goToFloor(user) {
     const { name, currentFloor, dropOffFloor } = user;
     this.motionStatus = 'idle';
@@ -28,14 +25,22 @@ export default class Elevator {
 
   getStops(riderFloor, dropOffFloor) {
     this.floorsStopped = this.requests.length;
-    if (riderFloor < dropOffFloor) {
-      return this.floorsTravelled += dropOffFloor;
-    } else if (this.currentFloor > dropOffFloor) {
-      return this.floorsTravelled += (this.currentFloor - dropOffFloor)
-    } else {
+    if(riderFloor < this.currentFloor && this.direction === 'going up') {
+      const elvToRider = this.currentFloor - riderFloor;
+      const riderToFloor = dropOffFloor - riderFloor;
+      this.floorsTravelled += (elvToRider + riderToFloor);
+    }
+    else if (riderFloor < dropOffFloor && this.direction === 'going up') {
+      this.floorsTravelled += (dropOffFloor - this.currentFloor);
+    }
+    else if (this.currentFloor > dropOffFloor && this.direction === 'going down') {
+      this.floorsTravelled += (this.currentFloor - dropOffFloor)
+    }
+    else {
+      const curr = this.currentFloor
       this.floorsTravelled = this.requests.reduce((acc, num, i) => {
-        return i % 2 === 0 ? acc += num : acc += (this.requests[i - 1] - num)
-      }, 0)
+        return i % 2 === 0 ? acc += (num - this.currentFloor) : acc += (this.requests[i - 1] - num)
+      }, curr)
     }
     return this.requests;
   }
