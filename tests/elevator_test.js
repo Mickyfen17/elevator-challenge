@@ -64,4 +64,19 @@ describe('Elevator', function() {
     assert.equal(elevator.floorsStopped, 2);
     assert.equal(elevator.floorsTravelled, 9);
   })
+
+  it('should be able to pick up a user, drop them off, then pick up a second user and also drop them offer', () => {
+    const mockUser1 = new Person({ name: "Bob", currentFloor: 3, dropOffFloor: 9 });
+    const mockUser2 = new Person({ name: "Sue", currentFloor: 6, dropOffFloor: 2 });
+
+    elevator.goToFloor(mockUser1);
+    assert.equal(elevator.direction, 'going up');
+    assert.equal(elevator.floorsStopped, 2);
+    assert.equal(elevator.floorsTravelled, 9);
+
+    elevator.goToFloor(mockUser2);
+    assert.equal(elevator.direction, 'going down');
+    assert.equal(elevator.floorsStopped, 4);
+    assert.equal(elevator.floorsTravelled, 16);
+  })
 });

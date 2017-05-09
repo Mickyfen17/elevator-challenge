@@ -18,18 +18,25 @@ export default class Elevator {
     this.requests.push(currentFloor, dropOffFloor)
     this.riders.push(name);
     this.getStops(currentFloor, dropOffFloor);
+    this.riderRemove();
     this.currentFloor = dropOffFloor;
-    return this;
+  }
+
+  riderRemove() {
+    this.riders.shift();
   }
 
   getStops(riderFloor, dropOffFloor) {
     this.floorsStopped = this.requests.length;
-    if(riderFloor < dropOffFloor) {
+    if (riderFloor < dropOffFloor) {
       return this.floorsTravelled += dropOffFloor;
+    } else if (this.currentFloor > dropOffFloor) {
+      return this.floorsTravelled += (this.currentFloor - dropOffFloor)
+    } else {
+      this.floorsTravelled = this.requests.reduce((acc, num, i) => {
+        return i % 2 === 0 ? acc += num : acc += (this.requests[i - 1] - num)
+      }, 0)
     }
-    this.floorsTravelled = this.requests.reduce((acc, num, i) => {
-      return i % 2 === 0 ? acc += num : acc += (this.requests[i - 1] - num)
-    }, 0)
     return this.requests;
   }
 
