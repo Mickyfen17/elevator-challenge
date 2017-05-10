@@ -31,7 +31,7 @@ describe('Elevator', function() {
     assert.deepEqual(elevator.getStops(), [8, 3]);
   });
 
-  it('should display "going up" if rider is travelling from a lower level to their request level', () => {
+  it('DIRECTION: should display "going up" if rider is travelling from a lower level to their request level', () => {
     const currentFloor = 4;
     const dropOffFloor = 10;
     const direction = elevator.elvDirection(currentFloor, dropOffFloor);
@@ -39,7 +39,7 @@ describe('Elevator', function() {
     assert.equal(direction, 'going up')
   })
 
-  it('should display "going down" if rider is travelling from a lower level to their request level', () => {
+  it('DIRECTION: should display "going down" if rider is travelling from a lower level to their request level', () => {
     const currentFloor = 8;
     const dropOffFloor = 2;
     const direction = elevator.elvDirection(currentFloor, dropOffFloor);
@@ -47,7 +47,7 @@ describe('Elevator', function() {
     assert.equal(direction, 'going down')
   })
 
-  it('should display weather the rider is travelling up to their request level and track stops and floors travelled', () => {
+  it('should display weather the rider is travelling up to their request level, track stops and floors travelled', () => {
     const mockUser = new Person({ name: "Brittany", currentFloor: 1, dropOffFloor: 5 });
     elevator.goToFloor(mockUser);
 
@@ -58,7 +58,7 @@ describe('Elevator', function() {
 
   })
 
-  it('should display weather the rider is travelling down to their request level and track stops and floors travelled', () => {
+  it('should display weather the rider is travelling down to their request level, track stops and floors travelled', () => {
     const mockUser = new Person({ name: "Brittany", currentFloor: 5, dropOffFloor: 1 });
     elevator.goToFloor(mockUser);
 
@@ -66,6 +66,30 @@ describe('Elevator', function() {
     assert.equal(elevator.floorsStopped, 2);
     assert.equal(elevator.floorsTravelled, 9);
     assert.deepEqual(elevator.completedRides, [5, 1]);
+  })
+
+  it('RIDER REMOVE: should display exiting rider once to rider is at their requested floor', () => {
+    const mockUser = new Person({ name: "Brittany", currentFloor: 3, dropOffFloor: 10 });
+    elevator.goToFloor(mockUser);
+
+    assert.equal(elevator.exitingRider, 'Brittany');
+    assert.equal(elevator.currentFloor, 10);
+    assert.deepEqual(elevator.completedRides, [3, 10]);
+  })
+
+  it('RIDER REMOVE: should display each exiting rider once each rider is at their requested floor', () => {
+    const mockUser1 = new Person({ name: "Bob", currentFloor: 6, dropOffFloor: 2 });
+    const mockUser2 = new Person({ name: "Sue", currentFloor: 1, dropOffFloor: 9 });
+
+    elevator.goToFloor(mockUser1);
+    assert.equal(elevator.exitingRider, 'Bob');
+    assert.equal(elevator.currentFloor, 2);
+    assert.deepEqual(elevator.completedRides, [6, 2]);
+
+    elevator.goToFloor(mockUser2);
+    assert.equal(elevator.exitingRider, 'Sue');
+    assert.equal(elevator.currentFloor, 9);
+    assert.deepEqual(elevator.completedRides, [6, 2, 1, 9]);
   })
 
   it('should be able to pick up a rider, drop them off, then pick up a second rider and also drop them offer', () => {
@@ -76,12 +100,14 @@ describe('Elevator', function() {
     assert.equal(elevator.direction, 'going up');
     assert.equal(elevator.floorsStopped, 2);
     assert.equal(elevator.floorsTravelled, 9);
+    assert.equal(elevator.exitingRider, 'Bob');
     assert.deepEqual(elevator.completedRides, [3, 9]);
 
     elevator.goToFloor(mockUser2);
     assert.equal(elevator.direction, 'going down');
     assert.equal(elevator.floorsStopped, 4);
     assert.equal(elevator.floorsTravelled, 16);
+    assert.equal(elevator.exitingRider, 'Sue');
     assert.deepEqual(elevator.completedRides, [3, 9, 6, 2]);
   })
 
@@ -160,8 +186,8 @@ describe('Elevator', function() {
     assert.equal(elevator.exitingRider, 'Sue');
     assert.deepEqual(elevator.completedRides, [7, 2, 8, 5]);
   })
-  
-  it('should maintain the elevator at last riders drop off floor when rider request time is pm', () => {
+
+  it('RETURN TO LOBBY: should maintain the elevator at last riders drop off floor when rider request time is pm', () => {
     const mockUser = new Person({ name: "Brittany", currentFloor: 0, dropOffFloor: 9, time: '09:10pm' });
 
     elevator.goToFloor(mockUser);
@@ -169,7 +195,7 @@ describe('Elevator', function() {
     assert.equal(elevator.floorsTravelled, 9)
   })
 
-  it('should return the elevator back to the ground floor when rider request time is am', () => {
+  it('RETURN TO LOBBY: should return the elevator back to the ground floor when rider request time is am', () => {
     const mockUser = new Person({ name: "Brittany", currentFloor: 0, dropOffFloor: 9, time: '06:30am' });
 
     elevator.goToFloor(mockUser);
@@ -244,5 +270,4 @@ describe('Elevator', function() {
     assert.equal(elevator.floorsTravelled, 30);
     assert.equal(elevator.exitingRider, 'Sue');
   })
-
 });
