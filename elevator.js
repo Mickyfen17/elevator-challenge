@@ -30,27 +30,14 @@ export default class Elevator {
   }
 
   getStops(riderFloor, dropOffFloor) {
-    const curr = this.currentFloor;
-    const direction = this.direction;
-    const requests = this.requests;
+    const current = this.currentFloor;
+    const curr2RiderMax = Math.max(current, riderFloor);
+    const curr2RiderMin = Math.min(current, riderFloor);
+    const rider2FloorMax = Math.max(riderFloor, dropOffFloor);
+    const rider2FloorMin = Math.min(riderFloor, dropOffFloor);
 
-    this.floorsStopped += requests.length;
-    if (riderFloor < curr && direction === 'going up') {
-      const elvToRider = curr - riderFloor;
-      const riderToFloor = dropOffFloor - riderFloor;
-      this.floorsTravelled += (elvToRider + riderToFloor);
-    }
-    else if (riderFloor < dropOffFloor && direction === 'going up') {
-      this.floorsTravelled += (dropOffFloor - curr);
-    }
-    else if (curr > dropOffFloor && direction === 'going down') {
-      this.floorsTravelled += (curr - dropOffFloor)
-    }
-    else {
-      this.floorsTravelled += requests.reduce((acc, num, i) => {
-        return i % 2 === 0 ? acc += (num - curr) : acc += (requests[i - 1] - num)
-      }, 0)
-    }
+    this.floorsStopped += this.requests.length;
+    this.floorsTravelled += (curr2RiderMax - curr2RiderMin) + (rider2FloorMax - rider2FloorMin)
     return this.completedRides;
   }
 
