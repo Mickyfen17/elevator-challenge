@@ -30,9 +30,8 @@ export default class Elevator {
   }
 
   getStops(riderFloor, dropOffFloor) {
-    const current = this.currentFloor;
-    const curr2RiderMax = Math.max(current, riderFloor);
-    const curr2RiderMin = Math.min(current, riderFloor);
+    const curr2RiderMax = Math.max(this.currentFloor, riderFloor);
+    const curr2RiderMin = Math.min(this.currentFloor, riderFloor);
     const rider2FloorMax = Math.max(riderFloor, dropOffFloor);
     const rider2FloorMin = Math.min(riderFloor, dropOffFloor);
 
