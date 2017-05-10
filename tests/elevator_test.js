@@ -160,6 +160,22 @@ describe('Elevator', function() {
     assert.equal(elevator.exitingRider, 'Sue');
     assert.deepEqual(elevator.completedRides, [7, 2, 8, 5]);
   })
+  
+  it('should maintain the elevator at last riders drop off floor when rider request time is pm', () => {
+    const mockUser = new Person({ name: "Brittany", currentFloor: 0, dropOffFloor: 9, time: '09:10pm' });
+
+    elevator.goToFloor(mockUser);
+    assert.equal(elevator.currentFloor, 9)
+    assert.equal(elevator.floorsTravelled, 9)
+  })
+
+  it('should return the elevator back to the ground floor when rider request time is am', () => {
+    const mockUser = new Person({ name: "Brittany", currentFloor: 0, dropOffFloor: 9, time: '06:30am' });
+
+    elevator.goToFloor(mockUser);
+    assert.equal(elevator.currentFloor, 0)
+    assert.equal(elevator.floorsTravelled, 18)
+  })
 
   it('should be able to pick two riders up who are both travelling up in the elevator and incorporate the elvator resetting to floor 0 between 00:00am & 11:59am', () => {
     const mockUser1 = new Person({ name: "Bob", currentFloor: 3, dropOffFloor: 7, time: '10:00am' });
@@ -228,4 +244,5 @@ describe('Elevator', function() {
     assert.equal(elevator.floorsTravelled, 30);
     assert.equal(elevator.exitingRider, 'Sue');
   })
+
 });
