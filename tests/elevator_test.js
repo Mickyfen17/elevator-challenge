@@ -270,4 +270,38 @@ describe('Elevator', function() {
     assert.equal(elevator.floorsTravelled, 30);
     assert.equal(elevator.exitingRider, 'Sue');
   })
+
+  it('should be able to pick two riders up with the first rider request at am and second rider request at pm', () => {
+    const mockUser1 = new Person({ name: "Bob", currentFloor: 6, dropOffFloor: 2, time: '11:59am' });
+    const mockUser2 = new Person({ name: "Sue", currentFloor: 5, dropOffFloor: 8, time: '12.01pm' });
+
+    elevator.goToFloor(mockUser1);
+    assert.equal(elevator.direction, 'going down');
+    assert.equal(elevator.floorsStopped, 2);
+    assert.equal(elevator.floorsTravelled, 12);
+    assert.equal(elevator.exitingRider, 'Bob');
+
+    elevator.goToFloor(mockUser2);
+    assert.equal(elevator.direction, 'going up');
+    assert.equal(elevator.floorsStopped, 4);
+    assert.equal(elevator.floorsTravelled, 20);
+    assert.equal(elevator.exitingRider, 'Sue');
+  })
+
+  it('should be able to pick two riders up with the first rider request at pm and second rider request at am', () => {
+    const mockUser1 = new Person({ name: "Bob", currentFloor: 3, dropOffFloor: 10, time: '11:55pm' });
+    const mockUser2 = new Person({ name: "Sue", currentFloor: 5, dropOffFloor: 8, time: '00.07am' });
+
+    elevator.goToFloor(mockUser1);
+    assert.equal(elevator.direction, 'going up');
+    assert.equal(elevator.floorsStopped, 2);
+    assert.equal(elevator.floorsTravelled, 10);
+    assert.equal(elevator.exitingRider, 'Bob');
+
+    elevator.goToFloor(mockUser2);
+    assert.equal(elevator.direction, 'going up');
+    assert.equal(elevator.floorsStopped, 4);
+    assert.equal(elevator.floorsTravelled, 26);
+    assert.equal(elevator.exitingRider, 'Sue');
+  })
 });
